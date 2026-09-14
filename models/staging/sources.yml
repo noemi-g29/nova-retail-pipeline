@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: workspace
+    schema: default
+    tables:
+      - name: bronze_sales
+      - name: bronze_targets
+      - name: bronze_reviews
