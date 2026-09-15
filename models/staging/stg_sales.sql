@@ -2,19 +2,18 @@ with source as (
     select * from {{ source('bronze', 'bronze_sales') }}
 ),
 
-cleaned as (
+parsed as (
     select
         cast(order_id as string) as order_id,
         
+        -- Parse valid dates strictly, return NULL for 'today' or corrupt formats
         coalesce(
-            case when lower(trim(transaction_date)) = 'today' then current_date() end,
             try_to_date(transaction_date, 'yyyy-MM-dd'),
             try_to_date(transaction_date, 'yyyy/MM/dd'),
             try_to_date(transaction_date, 'dd-MMM-yyyy'),
             try_to_date(transaction_date, 'MM/dd/yyyy'),
-            try_to_date(transaction_date, 'dd/MM/yyyy'),
-            date(_ingested_at)
-        ) as transaction_date,
+            try_to_date(transaction_date, 'dd/MM/yyyy')
+        ) as parsed_date,
         
         trim(split(customer_info, '\\|')[0]) as customer_name,
         trim(lower(split(customer_info, '\\|')[1])) as customer_email,
@@ -41,10 +40,35 @@ cleaned as (
         _ingested_at
     from source
     where order_id is not null
+),
+
+filled as (
+    select
+        *,
+        -- Forward-fill missing dates using the last known valid transaction date
+        coalesce(
+            parsed_date,
+            last_value(parsed_date, true) over (
+                order by _ingested_at, order_id 
+                rows between unbounded preceding and current row
+            )
+        ) as transaction_date
+    from parsed
 )
 
 select 
-    *,
+    order_id,
+    transaction_date,
+    customer_name,
+    customer_email,
+    customer_phone,
+    product_id,
+    product_category,
+    unit_price,
+    transaction_status,
+    quantity,
+    discount_pct,
+    _ingested_at,
     (quantity * unit_price * (1 - discount_pct)) as gross_amount,
     (quantity * unit_price * (1 - discount_pct) * 0.30) as gross_profit
-from cleaned
+from filled
