@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: workspace
+    schema: databricks_bronze
+    tables:
+      - name: bronze_sales
+      - name: bronze_targets
+      - name: bronze_reviews
+
+models:
+  - name: stg_sales
+    description: "Staged and cleaned sales transaction data."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: transaction_date
+        tests:
+          - not_null
+
+  - name: stg_targets
+    description: "Staged unpivoted targets mapping region, category, and month."
+    columns:
+      - name: region
+        tests:
+          - not_null
+      - name: product_category
+        tests:
+          - not_null
+      - name: target_month
+        tests:
+          - not_null
+      - name: target_amount
+        tests:
+          - not_null
+
+  - name: stg_reviews
+    description: "Staged product review data filtered for valid ratings."
+    columns:
+      - name: review_id
+        tests:
+          - unique
+          - not_null
+      - name: rating
+        tests:
+          - not_null

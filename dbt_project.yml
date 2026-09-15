@@ -18,3 +18,12 @@ clean-targets:
 models:
   nova_retail_pipeline:
     +catalog: workspace
+    
+    staging:
+      +schema: silver
+      +materialized: view
+
+    gold:
+      +schema: gold
+      +materialized: table
+    
