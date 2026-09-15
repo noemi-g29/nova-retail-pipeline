@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: bronze
     database: workspace
-    schema: default
+    schema: databricks_bronze
     tables:
       - name: bronze_sales
       - name: bronze_targets
