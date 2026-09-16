@@ -6,7 +6,7 @@ select
     review_id,
     product_id,
     review_timestamp,
-    cast(review_timestamp as date) as review_date, -- Joins to dim_date.date_key
+    cast(review_timestamp as date) as review_date, 
     rating,
     review_text,
     reviewer_name,
