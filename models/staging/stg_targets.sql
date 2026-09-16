@@ -46,7 +46,6 @@ where target_amount is not null
 
 {% else %}
 
--- Dummy query for dbt parsing/compilation phase
 select
     cast(null as string) as region,
     cast(null as string) as product_category,

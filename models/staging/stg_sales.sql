@@ -6,7 +6,6 @@ parsed as (
     select
         cast(order_id as string) as order_id,
         
-        -- Parse valid dates strictly, return NULL for 'today' or corrupt formats
         coalesce(
             try_to_date(transaction_date, 'yyyy-MM-dd'),
             try_to_date(transaction_date, 'yyyy/MM/dd'),
@@ -45,7 +44,6 @@ parsed as (
 filled as (
     select
         *,
-        -- Forward-fill missing dates using the last known valid transaction date
         coalesce(
             parsed_date,
             last_value(parsed_date, true) over (

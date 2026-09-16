@@ -1,5 +1,4 @@
 with date_bounds as (
-    -- Cast existing transaction_date to DATE to ensure clean min/max boundaries
     select 
         min(to_date(transaction_date)) as start_date,
         max(to_date(transaction_date)) as end_date
@@ -25,7 +24,6 @@ date_spine as (
 
 calculated as (
     select
-        -- Force pure DATE type (strips timestamp 'T00:00:00')
         to_date(date_day) as date_key,
         year(date_day) as year,
         quarter(date_day) as quarter,
@@ -33,7 +31,6 @@ calculated as (
         date_format(date_day, 'MMMM') as month_name,
         date_format(date_day, 'MMM') as month_name_short,
         
-        -- Force pure DATE type for first day of month
         to_date(date_trunc('month', date_day)) as first_day_of_month,
         
         date_format(date_day, 'yyyy-MM') as year_month,

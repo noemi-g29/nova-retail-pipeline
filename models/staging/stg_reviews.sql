@@ -7,7 +7,6 @@ cleaned as (
         cast(review_id as string) as review_id,
         cast(product_ref as string) as product_id,
         
-        -- Convert epoch timestamp (handles both milliseconds and seconds gracefully)
         case 
             when length(cast(timestamp as string)) >= 13 
                 then to_timestamp(cast(timestamp as double) / 1000.0)
@@ -26,7 +25,6 @@ cleaned as (
     from source
     where review_id is not null 
       and lower(trim(cast(review_id as string))) != 'null'
-      -- Clean rating bounds: must be non-null and strictly between 1 and 5 stars
       and try_cast(rating as int) is not null
       and try_cast(rating as int) >= 1
       and try_cast(rating as int) <= 5
