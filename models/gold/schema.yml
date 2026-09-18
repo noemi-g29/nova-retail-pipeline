@@ -50,7 +50,7 @@ models:
               arguments:
                 to: ref('dim_products')
                 field: product_id
-      - name: gross_profit
+      - name: estimated_profit
         tests:
           - not_null
 
@@ -61,7 +61,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: target_amount
+      - name: target_revenue
         tests:
           - not_null
 

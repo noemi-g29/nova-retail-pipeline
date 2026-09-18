@@ -30,7 +30,7 @@ unpivoted as (
     select *
     from source
     unpivot (
-        target_amount for month_year in (
+        target_revenue for month_year in (
             {{ month_cols_str }}
         )
     )
@@ -40,9 +40,9 @@ select
     trim(Region) as region,
     trim(Category) as product_category,
     to_date(month_year, 'MMM-yy') as target_month,
-    cast(regexp_replace(target_amount, '[\$,€,£,]', '') as double) as target_amount
+    cast(regexp_replace(target_revenue, '[\$,€,£,]', '') as double) as target_revenue
 from unpivoted
-where target_amount is not null
+where target_revenue is not null
 
 {% else %}
 
@@ -50,7 +50,7 @@ select
     cast(null as string) as region,
     cast(null as string) as product_category,
     cast(null as date) as target_month,
-    cast(null as double) as target_amount
+    cast(null as double) as target_revenue
 where 1=0
 
 {% endif %}
