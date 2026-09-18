@@ -11,6 +11,7 @@ select
     quantity,
     unit_price,
     discount_pct,
-    gross_amount,
-    gross_profit
+    gross_revenue,
+    net_revenue,
+    estimated_profit
 from stg_sales

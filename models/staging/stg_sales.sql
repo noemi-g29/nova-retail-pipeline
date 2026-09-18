@@ -67,6 +67,7 @@ select
     quantity,
     discount_pct,
     _ingested_at,
-    (quantity * unit_price * (1 - discount_pct)) as gross_amount,
-    (quantity * unit_price * (1 - discount_pct) * 0.30) as gross_profit
+    (quantity * unit_price) as gross_revenue,
+    (quantity * unit_price * (1 - discount_pct)) as net_revenue,
+    (quantity * unit_price * (1 - discount_pct) * 0.30) as estimated_profit
 from filled

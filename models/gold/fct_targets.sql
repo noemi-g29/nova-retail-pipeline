@@ -7,5 +7,5 @@ select
     region,
     product_category,
     cast(target_month as date) as target_month, 
-    target_amount
+    target_revenue
 from stg_targets
