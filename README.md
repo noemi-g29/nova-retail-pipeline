@@ -7,26 +7,27 @@ An end-to-end, fully automated retail data engineering pipeline built using the 
 
 The entire pipeline is orchestrated via a multi-task **Databricks Workflow** (`nova_retail_pipeline`) scheduled to run daily:
 
+```
 [ Google Drive / Source Dropzone ]
-│
-▼
+               │
+               ▼
 ┌──────────────────────────────────────────────┐
-│ Task 1: 01_bronze_ingestion                 │ ◄── Python Script (Daily Run)
+│ Task 1: 01_bronze_ingestion                  │ ◄── Python Script (Daily Run)
 │ (CSV, JSON, Excel → Bronze Delta Tables)     │
 └──────────────────────┬───────────────────────┘
-│
-▼
+                       │
+                       ▼
 ┌──────────────────────────────────────────────┐
 │ Task 2: 02_dbt_silver_gold_transformations   │ ◄── dbt deps && dbt run && dbt test
 │ (Data Cleansing & Star Schema Modeling)      │
 └──────────────────────┬───────────────────────┘
-│
-▼
+                       │
+                       ▼
 ┌──────────────────────────────────────────────┐
-│ Task 3: 03_update_powerbi_data              │ ◄── Programmatic REST API Refresh
+│ Task 3: 03_update_powerbi_data               │ ◄── Programmatic REST API Refresh
 │ (Automated Refresh on Microsoft Fabric)      │
 └──────────────────────────────────────────────┘
-
+```
 ## Tech Stack & Key Features
 
 * **Storage & Compute:** Databricks (Lakehouse / Delta Lake) + Spark
